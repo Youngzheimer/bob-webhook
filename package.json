@@ -1,0 +1,19 @@
+{
+  "name": "bob-webhook",
+  "version": "1.0.0",
+  "description": "bob discord webhook",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc --lib ES2015,DOM && node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.21",
+    "axios": "^1.7.2",
+    "express": "^4.19.2"
+  }
+}

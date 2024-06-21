@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOB</title>
+</head>
+<body class="p-4">
+    <h1 class="title is-1">Bob discord webhook</h1>
+    <!-- search school -->
+    <div class="is-flex">
+        <input class="input mr-2" type="text" id="schoolsearchtext" placeholder="학교 검색">
+        <button class="button is-primary" id="schoolsearchbtn">검색</button>
+    </div>
+    
+    <div id="schoolsearchresult" class="mt-4 p-5 mb-3"></div>
+    <hr>
+    <div class="is-flex mt-3">
+        <input class="input mr-2" type="text" id="webhookurl" placeholder="웹훅 URL">
+        <button class="button is-primary" id="webhookbutton">웹훅 추가</button>
+    </div>
+
+        <style>
+            @import "https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css";
+
+            #schoolsearchresult {
+                height: 500px;
+                overflow-y: scroll;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+
+            .button {
+                transition: all 0.3s;
+            }
+        </style>
+
+        <script>
+            const schoolsearchtext = document.getElementById('schoolsearchtext');
+            const schoolsearchbtn = document.getElementById('schoolsearchbtn');
+            const schoolsearchresult = document.getElementById('schoolsearchresult');
+            var selectedSchool = '';
+            var selectedEdu = '';
+
+            const webhookbutton = document.getElementById('webhookbutton');
+            const webhookurl = document.getElementById('webhookurl');
+
+            schoolsearchbtn.addEventListener('click', async () => {
+                const searchtext = schoolsearchtext.value;
+                const school = await fetch(`/api/searchschool?q=${searchtext}`);
+
+                if (!school.ok) {
+                    return alert('학교 검색에 실패했습니다.');
+                }
+
+                const schoolData = await school.json();
+
+                if (schoolData.status === 404) {
+                    schoolsearchresult.innerHTML = '검색 결과가 없습니다.';
+                }
+
+                schoolsearchresult.innerHTML = schoolData.result[1].row.map(school => {
+                    return `
+                        <div>
+                            <div class="is-flex">
+                                <h2 class="title is-4 mb-1">${school.SCHUL_NM}</h2>
+                                <span class="tag is-dark ml-2">${school.SD_SCHUL_CODE}</span>
+                            </div>
+                            <div class="is-flex">
+                                <p class="mb-3">${school.JU_ORG_NM}</p>
+                                <span class="tag is-dark ml-2">${school.ATPT_OFCDC_SC_CODE}</span>
+                            </div>
+                            <button class="button is-link schoolselect" id="${school.SD_SCHUL_CODE}-${school.ATPT_OFCDC_SC_CODE}">선택</button>
+                        </div>
+                        <hr>
+                    `;
+                }).join('');
+
+                const schoolselect = document.querySelectorAll('.schoolselect');
+                schoolselect.forEach((btn, index) => {
+                    btn.addEventListener('click', (e) => {
+                        const [sd, atpt] = e.target.id.split('-');
+                        selectedSchool = sd;
+                        selectedEdu = atpt;
+
+                        // add disabled attribute
+                        e.target.setAttribute('disabled', 'disabled');
+                        e.target.innerText = '선택됨';
+                        e.target.classList.add('sel');
+
+                        document.querySelectorAll('.schoolselect').forEach((btn, index) => {
+                            if (btn.id !== e.target.id) {
+                                btn.removeAttribute('disabled');
+                                btn.innerText = '선택';
+                                btn.classList.remove('sel');
+                            }
+                        });
+                    });
+                });
+            });
+            
+            webhookbutton.addEventListener('click', async () => {
+                const url = webhookurl.value;
+
+                if (!url) {
+                    return alert('웹훅 URL을 입력해주세요.');
+                }
+
+                if (!selectedSchool || !selectedEdu) {
+                    return alert('학교를 선택해주세요.');
+                }
+
+                const webhook = await fetch(`/api/addwebhook?url=${url}&school=${selectedSchool}&edu=${selectedEdu}`);
+
+                if (!webhook.ok) {
+                    return alert('웹훅 추가에 실패했습니다.');
+                }
+
+                const webhookData = await webhook.json();
+
+                alert("웹훅이 추가되었습니다.");
+            });
+        </script>
+</body>
+</html>
