@@ -14,10 +14,23 @@
     </div>
     
     <div id="schoolsearchresult" class="mt-4 p-5 mb-3 box"></div>
+
     <hr>
-    <div class="is-flex mt-3">
+
+    <div class="is-flex mt-3 mb-3">
         <input class="input mr-2" type="text" id="webhookurl" placeholder="웹훅 URL">
         <button class="button is-primary" id="webhookbutton">웹훅 추가</button>
+    </div>
+
+    <hr>
+
+    <div class="box mb-3" id="bob" style="display: none;">
+        <h1 class="title is-3">오늘의 급식</h1>
+        <div id="bobresult">
+            <h3 class="title is-5">중식</h3>
+            <p id="lunch">
+            </p>
+        </div>
     </div>
 
         <style>
@@ -80,7 +93,7 @@
 
                 const schoolselect = document.querySelectorAll('.schoolselect');
                 schoolselect.forEach((btn, index) => {
-                    btn.addEventListener('click', (e) => {
+                    btn.addEventListener('click', async (e) => {
                         const [sd, atpt] = e.target.id.split('-');
                         selectedSchool = sd;
                         selectedEdu = atpt;
@@ -95,6 +108,35 @@
                                 btn.removeAttribute('disabled');
                                 btn.innerText = '선택';
                                 btn.classList.remove('sel');
+                            }
+                        });
+
+                        document.getElementById('bob').style.display = 'block';
+                        document.getElementById('bobresult').innerHTML = '<div class="has-text-centered">금식 정보를 가져오는 중입니다.</div>';
+
+                        const bob = await fetch(`/api/getbob?school=${selectedSchool}&edu=${selectedEdu}`);
+
+                        if (!bob.ok) {
+                            document.getElementById('bobresult').innerText = '급식 정보를 가져오는데 실패했습니다.';
+                            return;
+                        }
+
+                        const bobData = await bob.json();
+
+                        if (bobData.status === 404) {
+                            document.getElementById('bobresult').innerText = '급식 정보가 없습니다.';
+                            return;
+                        }
+
+                        document.getElementById('bobresult').innerHTML = '';
+
+                        bobData.result[1].row.forEach((bob, index) => {
+                            document.getElementById('bobresult').innerHTML += `
+                                <h3 class="title is-5 mb-2">${bob.MMEAL_SC_NM}</h3>
+                                <p>${bob.DDISH_NM}</p>
+                            `;
+                            if (index !== bobData.result[1].row.length - 1) {
+                                document.getElementById('bobresult').innerHTML += '<hr class="mt-4 mb-4">';
                             }
                         });
                     });

@@ -1,5 +1,6 @@
 config.json
 *.js
+*.sqlite
 
 # Logs
 logs
