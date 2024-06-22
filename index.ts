@@ -9,6 +9,8 @@ const bobURL = "https://open.neis.go.kr/hub/mealServiceDietInfo";
 
 const app = express();
 
+app.use(express.static("src"));
+
 // sqlite init
 const db = new sqlite3.Database("db.sqlite");
 db.serialize(() => {
@@ -55,9 +57,9 @@ async function getWebhook(url?: string): Promise<any[]> {
   });
 }
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/src/index.html");
-});
+// app.get("/", (req, res) => {
+//   res.sendFile(__dirname + "/src/index.html");
+// });
 
 app.get("/api/searchschool", async (req, res) => {
   const q = req.query.q;

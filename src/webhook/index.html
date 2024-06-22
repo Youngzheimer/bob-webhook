@@ -7,24 +7,35 @@
 </head>
 <body class="p-4">
     <div class="has-text-centered mb-4">
-        <h1 class="title is-1">BOB</h1>
+        <h1 class="title is-1">BOB webhook</h1>
+    </div>
+    <div class="is-flex mt-3 mb-3">
+        <input class="input mr-2" type="text" id="webhookurl" placeholder="웹훅 URL">
+        <button class="button is-primary" id="webhookbutton">웹훅 추가</button>
     </div>
 
-    <div class="box mb-3" id="bob">
-        <h1 class="title is-3">오늘의 급식</h1>
-        <div id="bobresult">
-        </div>
-    </div>
+    <hr>
 
-    <div id="schoolsearch" style="display: none;">
+    <div class="is-flex">
         <input class="input mr-2" type="text" id="schoolsearchtext" placeholder="학교 검색">
         <button class="button is-primary" id="schoolsearchbtn">검색</button>
     </div>
     
-    <div id="schoolsearchresult" class="mt-4 p-5 mb-3 box" style="display: none;"></div>
+    <div id="schoolsearchresult" class="mt-4 p-5 mb-3 box">
+        <div class="has-text-centered">
+            <p>학교를 선택해주세요.</p>
+        </div>
+    </div>
 
-    <div class="has-text-centered" id="changeschool">
-        <button class="button is-primary">학교 바꾸기</button>
+    <hr>
+
+    <div class="box mb-3" id="bob" style="display: none;">
+        <h1 class="title is-3">오늘의 급식</h1>
+        <div id="bobresult">
+            <h3 class="title is-5">중식</h3>
+            <p id="lunch">
+            </p>
+        </div>
     </div>
 
         <style>
@@ -38,62 +49,21 @@
                 /* border: 1px solid #444; */
                 /* border-radius: 6px; */
             }
+
+            .button {
+                transition: all 0.3s;
+            }
         </style>
 
         <script>
-            document.addEventListener("DOMContentLoaded", async () => {
-                const school = document.cookie.split(';').find(c => c.includes('school'));
-                const edu = document.cookie.split(';').find(c => c.includes('edu'));
-
-                if (!school || !edu) {
-                    console.log('no school or edu');
-                    document.querySelector('#schoolsearch').style.display = 'flex';
-                    document.querySelector('#schoolsearchresult').style.display = 'block';
-                    document.querySelector('#changeschool').style.display = 'none';
-                    return;
-                }
-
-                const bob = await fetch(`/api/getbob?school=${school.split('=')[1]}&edu=${edu.split('=')[1]}`);
-
-                if (!bob.ok) {
-                    document.getElementById('bobresult').innerText = '급식 정보를 가져오는데 실패했습니다.';
-                    return;
-                }
-
-                const bobData = await bob.json();
-
-                if (bobData.status === 404) {
-                    document.getElementById('bobresult').innerText = '급식 정보가 없습니다.';
-                    return;
-                }
-
-                document.getElementById('bobresult').innerHTML = '';
-
-                bobData.result[1].row.forEach((bob, index) => {
-                    document.getElementById('bobresult').innerHTML += `
-                        <h3 class="title is-5 mb-2">${bob.MMEAL_SC_NM}</h3>
-                        <p>${bob.DDISH_NM}</p>
-                    `;
-                    if (index !== bobData.result[1].row.length - 1) {
-                        document.getElementById('bobresult').innerHTML += '<hr class="mt-4 mb-4">';
-                    }
-                });
-            });
-
-            const changeschool = document.getElementById('changeschool');
-
-            changeschool.addEventListener('click', () => {
-                document.querySelector('#schoolsearch').style.display = 'flex';
-                document.querySelector('#schoolsearchresult').style.display = 'block';
-                document.querySelector('#changeschool').style.display = 'none';
-            });
-
             const schoolsearchtext = document.getElementById('schoolsearchtext');
             const schoolsearchbtn = document.getElementById('schoolsearchbtn');
             const schoolsearchresult = document.getElementById('schoolsearchresult');
+            var selectedSchool = '';
+            var selectedEdu = '';
 
-            let selectedSchool = '';
-            let selectedEdu = '';
+            const webhookbutton = document.getElementById('webhookbutton');
+            const webhookurl = document.getElementById('webhookurl');
 
             schoolsearchbtn.addEventListener('click', async () => {
                 const searchtext = schoolsearchtext.value;
@@ -138,10 +108,6 @@
                         e.target.innerText = '선택됨';
                         e.target.classList.add('sel');
 
-                        document.cookie = 'school=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                        document.cookie = `school=${selectedSchool}`;
-                        document.cookie = `edu=${selectedEdu}`;
-
                         document.querySelectorAll('.schoolselect').forEach((btn, index) => {
                             if (btn.id !== e.target.id) {
                                 btn.removeAttribute('disabled');
@@ -152,10 +118,6 @@
 
                         document.getElementById('bob').style.display = 'block';
                         document.getElementById('bobresult').innerHTML = '<div class="has-text-centered">금식 정보를 가져오는 중입니다.</div>';
-
-                        document.querySelector('#schoolsearch').style.display = 'none';
-                        document.querySelector('#schoolsearchresult').style.display = 'none';
-                        document.querySelector('#changeschool').style.display = 'block';
 
                         const bob = await fetch(`/api/getbob?school=${selectedSchool}&edu=${selectedEdu}`);
 
@@ -186,7 +148,30 @@
                 });
             });
             
-        </script>
+            webhookbutton.addEventListener('click', async () => {
+                webhookbutton.setAttribute('disabled', 'disabled');
+                webhookbutton.classList.add('is-loading');
 
+                const url = webhookurl.value;
+
+                if (!url) {
+                    return alert('웹훅 URL을 입력해주세요.');
+                }
+
+                if (!selectedSchool || !selectedEdu) {
+                    return alert('학교를 선택해주세요.');
+                }
+
+                const webhook = await fetch(`/api/addwebhook?url=${url}&school=${selectedSchool}&edu=${selectedEdu}`);
+
+                if (!webhook.ok) {
+                    return alert('웹훅 추가에 실패했습니다.');
+                }
+
+                const webhookData = await webhook.json();
+
+                alert("웹훅이 추가되었습니다.");
+            });
+        </script>
 </body>
 </html>
