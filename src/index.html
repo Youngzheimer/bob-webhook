@@ -13,7 +13,7 @@
         <button class="button is-primary" id="schoolsearchbtn">검색</button>
     </div>
     
-    <div id="schoolsearchresult" class="mt-4 p-5 mb-3"></div>
+    <div id="schoolsearchresult" class="mt-4 p-5 mb-3 box"></div>
     <hr>
     <div class="is-flex mt-3">
         <input class="input mr-2" type="text" id="webhookurl" placeholder="웹훅 URL">
@@ -26,8 +26,10 @@
             #schoolsearchresult {
                 height: 500px;
                 overflow-y: scroll;
-                border: 1px solid #ccc;
-                border-radius: 6px;
+                /* scrollbar hidden */
+                scrollbar-width: none;
+                /* border: 1px solid #444; */
+                /* border-radius: 6px; */
             }
 
             .button {
@@ -100,6 +102,9 @@
             });
             
             webhookbutton.addEventListener('click', async () => {
+                webhookbutton.setAttribute('disabled', 'disabled');
+                webhookbutton.classList.add('is-loading');
+
                 const url = webhookurl.value;
 
                 if (!url) {

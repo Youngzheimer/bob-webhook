@@ -13,6 +13,18 @@
 `status`: 200 or 404. you know what it means \
 `result`?: school list
 
+## /api/getbob
+
+### request
+
+`school`: school ID \
+`edu`: edu ID
+
+### responce
+
+`status`: 200 or 404 \
+`result`: mealServiceDietInfo
+
 ## /api/addwebhook
 
 `GET`

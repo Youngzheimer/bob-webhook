@@ -37,6 +37,37 @@ app.get("/api/searchschool", async (req, res) => {
   }
 });
 
+app.get("/api/getbob", async (req, res) => {
+  const schoolCode = req.query.school;
+  const eduCode = req.query.edu;
+
+  const bob = await axios.get(bobURL, {
+    params: {
+      KEY: config.key,
+      Type: "json",
+      ATPT_OFCDC_SC_CODE: eduCode,
+      SD_SCHUL_CODE: schoolCode,
+      MLSV_YMD: new Date()
+        .toISOString()
+        .slice(0, 10)
+        .replace("-", "")
+        .replace("-", ""),
+    },
+  });
+
+  if (bob.data.mealServiceDietInfo) {
+    return res.send({
+      status: 200,
+      result: bob.data.mealServiceDietInfo,
+    });
+  } else {
+    return res.send({
+      status: 404,
+      result: "급식 정보가 없습니다.",
+    });
+  }
+});
+
 app.get("/api/addwebhook", async (req, res) => {
   const url = req.query.url;
   const schoolCode = req.query.school;
