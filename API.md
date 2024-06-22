@@ -38,3 +38,15 @@
 ### responce
 
 `status`: okay you know this
+
+## /api/deletewebhook
+
+`GET`
+
+### request
+
+`url`: url of webhook
+
+### responce
+
+`status`: 200 or 404 yes

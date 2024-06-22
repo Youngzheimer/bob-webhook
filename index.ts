@@ -33,8 +33,18 @@ async function addToDB(url: string, schoolCode: string, eduCode: string) {
   });
 }
 
-async function getWebhook(): Promise<any[]> {
+async function getWebhook(url?: string): Promise<any[]> {
   return new Promise((resolve, reject) => {
+    if (url) {
+      db.all("SELECT * FROM webhook WHERE url = ?", [url], (err, rows) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    }
+
     db.all("SELECT * FROM webhook", (err, rows) => {
       if (err) {
         reject(err);
@@ -146,6 +156,40 @@ app.get("/api/addwebhook", async (req, res) => {
   //         .replace("-", ""),
   //     },
   //   });
+});
+
+app.get("/api/deletewebhook", async (req, res) => {
+  const url = req.query.url;
+
+  if (typeof url !== "string" || url.length === 0) {
+    return res.send({
+      status: 400,
+      result: "wrong query",
+    });
+  }
+
+  const webhooks = await getWebhook(url);
+
+  if (webhooks.length === 0) {
+    return res.send({
+      status: 404,
+      result: "webhook not found",
+    });
+  }
+
+  db.run("DELETE FROM webhook WHERE url = ?", [url], (err) => {
+    if (err) {
+      return res.send({
+        status: 500,
+        result: err,
+      });
+    }
+
+    return res.send({
+      status: 200,
+      result: "success",
+    });
+  });
 });
 
 corn.schedule("0 9 * * *", async () => {
