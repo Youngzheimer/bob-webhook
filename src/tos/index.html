@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service</title>
+    <style>
+        @import "https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css";
+    </style>
+</head>
+<body class="p-4">
+    <div class="has-text-centered mb-4">
+        <h1 class="title is-1" id="title">Terms of Service</h1>
+    </div>
+    <div class="buttons is-centered mb-4">
+        <button class="button is-link" onclick="setLanguage('en')">English</button>
+        <button class="button is-link" onclick="setLanguage('ko')">한국어</button>
+    </div>
+    <div id="content">
+        <div id="en" class="content">
+            <h2>Terms of Service for KimGeupSik Discord Bot</h2>
+            <h3>1. Introduction</h3>
+            <p>Welcome to the KimGeupSik Discord Bot ("Bot"). By using the Bot, you agree to the following terms and conditions.</p>
+            <h3>2. Service Description</h3>
+            <p>The Bot provides meal information for elementary, middle, and high schools in South Korea.</p>
+            <h3>3. User Data Collection</h3>
+            <p>The Bot collects school ID, educational office ID, and associates this data with your user ID or guild ID. Additionally, command logs including timestamp, channel ID, guild ID, user ID, command used, and prompt are recorded.</p>
+            <h3>4. Data Usage</h3>
+            <p>Collected school information is used solely to provide meal information. Log data is used for Bot management purposes.</p>
+            <h3>5. Data Storage and Retention</h3>
+            <p>Data is stored on our private servers and retained until a deletion request is made by the user.</p>
+            <h3>6. Data Sharing</h3>
+            <p>Your school and educational office ID are used with the educational office's API to retrieve meal information.</p>
+            <h3>7. User Rights</h3>
+            <p>Users have the right to request the deletion of their data.</p>
+            <h3>8. Disclaimer</h3>
+            <p>All information provided by the Bot may be incorrect and has no legal validity. We do not guarantee the accuracy of the data, and users assume all risks arising from the use of the information.</p>
+            <h3>9. Changes to the Terms</h3>
+            <p>Changes to the terms will be adequately notified via DM or guild messages.</p>
+            <h3>10. Contact Information</h3>
+            <p>For inquiries, please contact us at bob@youngzheimer.com.</p>
+        </div>
+        <div id="ko" class="content is-hidden">
+            <h2>김급식 디스코드 봇 이용 약관</h2>
+            <h3>1. 소개</h3>
+            <p>김급식 디스코드 봇(이하 "봇")을 사용함으로써 다음 이용 약관에 동의하게 됩니다.</p>
+            <h3>2. 서비스 설명</h3>
+            <p>봇은 대한민국 초중고등학교의 급식 정보를 제공합니다.</p>
+            <h3>3. 사용자 데이터 수집</h3>
+            <p>봇은 학교 ID, 교육청 ID를 사용자 ID 또는 길드 ID와 함께 저장합니다. 또한 명령어 사용 시, 사용 시간, 채널 ID, 길드 ID, 사용자 ID, 사용한 명령어, 프롬프트 등을 기록합니다.</p>
+            <h3>4. 데이터 사용 목적</h3>
+            <p>수집된 학교 정보는 급식 정보를 제공하는 용도로 사용되며, 로그 정보는 봇의 관리를 위해 사용됩니다.</p>
+            <h3>5. 데이터 저장 위치 및 기간</h3>
+            <p>데이터는 자체 서버에 저장되며, 사용자가 삭제 요청을 하기 전까지 보관됩니다.</p>
+            <h3>6. 데이터 공유</h3>
+            <p>학교와 교육청 ID는 교육청 API를 통해 급식 정보를 가져오는 데 사용됩니다.</p>
+            <h3>7. 사용자 권리</h3>
+            <p>사용자는 데이터 삭제를 요청할 수 있는 권리가 있습니다.</p>
+            <h3>8. 책임 한계</h3>
+            <p>봇이 제공하는 모든 정보는 틀릴 수 있으며, 법적 효력이 없습니다. 제공된 데이터로 인한 문제는 사용자에게 모든 책임이 있습니다.</p>
+            <h3>9. 이용 약관 변경</h3>
+            <p>이용 약관이 변경될 경우, 봇을 사용하는 계정의 DM이나 길드 메시지 등으로 충분히 고지될 예정입니다.</p>
+            <h3>10. 연락처 정보</h3>
+            <p>문의 사항은 bob@youngzheimer.com으로 연락해주시기 바랍니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function setLanguage(language) {
+            const enContent = document.getElementById('en');
+            const koContent = document.getElementById('ko');
+            if (language === 'en') {
+                enContent.classList.remove('is-hidden');
+                koContent.classList.add('is-hidden');
+                document.getElementById('title').innerText = 'Terms of Service';
+            } else {
+                enContent.classList.add('is-hidden');
+                koContent.classList.remove('is-hidden');
+                document.getElementById('title').innerText = '이용 약관';
+            }
+        }
+
+        // Default language
+        setLanguage('en');
+    </script>
+</body>
+</html>

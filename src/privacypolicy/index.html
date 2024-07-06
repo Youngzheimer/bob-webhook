@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy</title>
+    <style>
+        @import "https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css";
+    </style>
+</head>
+<body class="p-4">
+    <div class="has-text-centered mb-4">
+        <h1 class="title is-1" id="title">Privacy Policy</h1>
+    </div>
+    <div class="buttons is-centered mb-4">
+        <button class="button is-link" onclick="setLanguage('en')">English</button>
+        <button class="button is-link" onclick="setLanguage('ko')">한국어</button>
+    </div>
+    <div id="content">
+        <div id="en" class="content">
+            <h2>Privacy Policy for KimGeupSik Discord Bot</h2>
+            <h3>1. Introduction</h3>
+            <p>This Privacy Policy explains how the KimGeupSik Discord Bot ("Bot") collects, uses, and shares your information.</p>
+            <h3>2. Data Collection</h3>
+            <p>The Bot collects the following data:
+               <ul>
+                  <li>School ID and educational office ID associated with your user ID or guild ID.</li>
+                  <li>Command logs including timestamp, channel ID, guild ID, user ID, command used, and prompt.</li>
+               </ul>
+            </p>
+            <h3>3. Purpose of Data Use</h3>
+            <p>School information is used solely to provide meal information. Log data is used for Bot management and security purposes.</p>
+            <h3>4. Data Storage and Retention</h3>
+            <p>Data is stored on private servers and retained until a deletion request is made by the user.</p>
+            <h3>5. Data Sharing</h3>
+            <p>School and educational office IDs are used with the educational office's API to retrieve meal information. No other third-party sharing occurs.</p>
+            <h3>6. User Rights</h3>
+            <p>Users can request the deletion of their data by contacting us.</p>
+            <h3>7. Changes to Privacy Policy</h3>
+            <p>Any changes to this policy will be communicated via DM or guild messages.</p>
+            <h3>8. Contact Information</h3>
+            <p>For inquiries regarding this policy, contact bob@youngzheimer.com.</p>
+        </div>
+        <div id="ko" class="content is-hidden">
+            <h2>김급식 디스코드 봇 개인정보 처리방침</h2>
+            <h3>1. 소개</h3>
+            <p>본 개인정보 처리방침은 김급식 디스코드 봇(이하 "봇")이 사용자 정보를 수집, 사용, 공유하는 방법을 설명합니다.</p>
+            <h3>2. 데이터 수집</h3>
+            <p>봇은 다음과 같은 데이터를 수집합니다:
+               <ul>
+                  <li>학교 ID와 교육청 ID를 사용자 ID 또는 길드 ID와 함께 저장.</li>
+                  <li>명령어 로그 (사용 시간, 채널 ID, 길드 ID, 사용자 ID, 사용한 명령어, 프롬프트 등).</li>
+               </ul>
+            </p>
+            <h3>3. 데이터 사용 목적</h3>
+            <p>학교 정보는 급식 정보를 제공하기 위해 사용됩니다. 로그 데이터는 봇 관리 및 보안을 위해 사용됩니다.</p>
+            <h3>4. 데이터 저장 위치 및 기간</h3>
+            <p>데이터는 자체 서버에 저장되며, 사용자가 삭제 요청을 하기 전까지 보관됩니다.</p>
+            <h3>5. 데이터 공유</h3>
+            <p>학교와 교육청 ID는 교육청 API를 통해 급식 정보를 가져오는 데 사용됩니다. 그 외의 제3자와의 데이터 공유는 없습니다.</p>
+            <h3>6. 사용자 권리</h3>
+            <p>사용자는 데이터 삭제를 요청할 수 있습니다.</p>
+            <h3>7. 개인정보 처리방침 변경</h3>
+            <p>본 방침이 변경될 경우, DM이나 길드 메시지를 통해 사용자에게 고지할 것입니다.</p>
+            <h3>8. 연락처 정보</h3>
+            <p>본 방침에 대한 문의는 bob@youngzheimer.com으로 연락해주시기 바랍니다.</p>
+        </div>
+    </div>
+
+    <script>
+        function setLanguage(language) {
+            const enContent = document.getElementById('en');
+            const koContent = document.getElementById('ko');
+            if (language === 'en') {
+                enContent.classList.remove('is-hidden');
+                koContent.classList.add('is-hidden');
+                document.getElementById('title').innerText = 'Privacy Policy';
+            } else {
+                enContent.classList.add('is-hidden');
+                koContent.classList.remove('is-hidden');
+                document.getElementById('title').innerText = '개인정보 처리방침';
+            }
+        }
+
+        // Default language
+        setLanguage('en');
+    </script>
+</body>
+</html>
